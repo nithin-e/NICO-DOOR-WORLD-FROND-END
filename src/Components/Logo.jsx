@@ -39,7 +39,7 @@ export const Logo = () => {
       </svg>
       <div className="flex flex-col">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-extrabold text-amber-900 tracking-tight">NICE DOOR</span>
+          <span className="text-2xl font-extrabold text-amber-900 tracking-tight">NICO DOOR</span>
         </div>
         <span className="text-lg font-medium text-amber-700 tracking-widest">WORLD</span>
       </div>

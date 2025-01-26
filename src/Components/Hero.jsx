@@ -1,5 +1,14 @@
+import { Navbar } from './Navbar';
+import { Footer } from './Footer';
+import { ProductSection } from './ProductSection';
+import { FeaturesSection } from './FeaturesSection';
+import {ContactSection} from './ContactSection'
+
 export const Hero = () => {
-    return (
+  return (
+    <>
+      <Navbar />
+
       <div className="relative bg-amber-800 text-white">
         <div className="max-w-7xl mx-auto px-4 py-24">
           <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -11,23 +20,24 @@ export const Hero = () => {
                 Visit our showroom to explore our extensive collection of premium doors. Expert consultation available.
               </p>
               <div className="flex gap-4">
-                <button className="bg-white text-amber-800 px-8 py-3 rounded-full font-medium hover:bg-amber-50 transition">
-                  View Catalogue
-                </button>
                 <button className="border-2 border-white text-white px-8 py-3 rounded-full font-medium hover:bg-white hover:text-amber-800 transition">
-                  Book Consultation
+                  View Collection
                 </button>
               </div>
             </div>
             <div className="hidden md:block">
-              <img 
-                src="/api/placeholder/600/400" 
-                alt="Showroom Display" 
-                className="rounded-lg shadow-xl"
-              />
+              {/* You can add an image or another content here */}
             </div>
           </div>
         </div>
       </div>
-    );
-  };
+
+      <ProductSection />
+      <FeaturesSection />
+      <ContactSection/>
+
+      
+      <Footer />
+    </>
+  );
+};

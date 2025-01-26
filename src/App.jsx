@@ -1,27 +1,25 @@
 import "./App.css";
-import { Navbar } from "./Components/Navbar";
+import { Routes, Route } from "react-router-dom";
 import { Hero } from "./Components/Hero";
-import { ProductSection } from "./Components/ProductSection";
-import { FeaturesSection } from "./Components/FeaturesSection";
-import { ContactSection } from "./Components/ContactSection";
-import { Footer } from "./Components/Footer";
+import ProductList from './Components/ProductList'
+import ProductDetails from './Components/ProductDetails'
+import AdminLogin from "./pages/AdminLogin";
+import AdminHome from "./pages/AdminDashBoard";
+
+
+
 
 function App() {
   return (
-    <>
-      {/* <div className=" min-h-screen flex flex-col gap-8 items-center justify-center  text-white text-[48px] font-bold bg-black">
-        <h1 className="text-[56px]">🗿</h1>
-        <h1>Hello World</h1>
-      </div> */}
-      <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <Hero />
-      <ProductSection />
-      <FeaturesSection />
-      <ContactSection />
-      <Footer />
-    </div> 
-    </>
+    <div className="min-h-screen bg-gray-50">
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/ProductList" element={<ProductList />} />
+        <Route path="/ProductDetails" element={<ProductDetails />} />
+        <Route path="/adminLoginPage" element={<AdminLogin/>}  />
+        <Route path="/adminHome" element={<AdminHome/>}  />
+      </Routes>
+    </div>
   );
 }
 
