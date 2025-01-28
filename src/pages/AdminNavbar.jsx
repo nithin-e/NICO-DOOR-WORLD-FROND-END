@@ -10,8 +10,8 @@ const AdminNavbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-sm p-4 flex justify-between items-center">
-      <div className="flex items-center">
+    <nav className="bg-white shadow-sm p-4 flex justify-between items-center flex-wrap">
+      <div className="flex items-center mb-4 sm:mb-0">
         <svg 
           viewBox="0 0 50 50" 
           className="w-12 h-12 mr-3"
@@ -32,7 +32,7 @@ const AdminNavbar = () => {
         <h1 className="text-2xl font-bold text-amber-900">Nice Door</h1>
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 flex-wrap sm:flex-nowrap">
         <button 
           onClick={() => navigate('/dashboard')} 
           className="flex items-center text-amber-900 hover:bg-amber-100 px-3 py-2 rounded-md"
@@ -56,7 +56,7 @@ const AdminNavbar = () => {
         </button>
         <button 
           onClick={handleLogout}
-          className="bg-red-100 text-red-800 px-4 py-2 rounded-md hover:bg-red-200 transition flex items-center"
+          className="bg-red-100 text-red-800 px-4 py-2 rounded-md hover:bg-red-200 transition flex items-center mt-2 sm:mt-0"
         >
           <LogOut className="mr-2 h-5 w-5" />
           Logout
