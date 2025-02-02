@@ -1,11 +1,16 @@
 import { useState } from "react";
 import axiosInstance from '../cors/axiousInstence'
 import ProductValidation from "../util/productValidation";
+import { useNavigate } from "react-router-dom";
 
 const ProductModal = ({ product, onSave, onClose }) => {
 
+  const navigate = useNavigate();
+
+
   const [error,setError]=useState('')
   const [images, setImages] = useState([]);
+  const [imageFile,setimageFile]=useState([])
   const [formData, setFormData] = useState({
     name: '',
     brand: '',
@@ -29,54 +34,95 @@ const ProductModal = ({ product, onSave, onClose }) => {
 
   const handleImageUpload = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const imageUrls = selectedFiles.map((file) => URL.createObjectURL(file));
-    setImages((prevImages) => [...prevImages, ...imageUrls]);
+    setImages((prevImages) => [...prevImages, ...selectedFiles]); 
+      const imageUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+      setimageFile((prevImages) => [...prevImages, ...imageUrls])
   };
 
 
+
+
+
+
+  const uploadImageToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "nico-door-world");
+  
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/ddwsn0bwq/image/upload", 
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+  
+      const data = await response.json();
+      console.log('this is the responce from cloud',data);
+      
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary Upload Error:", error);
+      return null;
+    }
+  };
+  
 
   
   const handleRemoveImage = (url) => {
-    setImages((prevImages) => prevImages.filter((image) => image !== url));
+    setimageFile((prevImages) => prevImages.filter((image) => image !== url));
   };
 
 
 
 
-
-  const handleSubmit =async (e) => {
-    e.preventDefault()
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
     try {
+      const { isValid, errors } = ProductValidation(formData);
+  
+      if (isValid) {
+        const formDataToSend = new FormData();
+  
+        const uploadedImages = await Promise.all(
+          images.map((image) => uploadImageToCloudinary(image)) 
+        );
+  
+        // Append form fields
+        Object.entries(formData).forEach(([key, value]) => {
+          formDataToSend.append(key, value);
+        });
+  
+        // Append each uploaded image URL to the formData
+        uploadedImages.forEach((url) => {
+          if (url) formDataToSend.append("images", url); 
+        });
+  
 
-const { isValid, errors }=ProductValidation(formData)
+        onSave(formDataToSend);
 
-if(isValid){
-  const formDataToSend = new FormData();
-      
-      // Append form fields
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
-      });
+        const response = await axiosInstance.post(
+          "http://localhost:4000/api/addProduct",
+          formDataToSend,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+  
+        console.log("..................................",response);
+        navigate('/adminHome')
 
-      // Append images
-      images.forEach((image, index) => {
-        formDataToSend.append(`images`, image);
-      });
-  const response = await axiosInstance.post('http://localhost:4000/api/addProduct', formDataToSend, {
-    headers: { 'Content-Type': 'application/json' },
-});
-console.log(response)
-}else{
-  setError(errors)
-}
-      
+      } else {
+        setError(errors);
+      }
     } catch (error) {
-      console.log('this is catch block');
+      console.log("Error in handleSubmit");
       console.log(error);
     }
-
   };
+  
 
 
 
@@ -143,7 +189,7 @@ console.log(response)
 
       {/* Render Uploaded Images */}
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {images.map((image, index) => (
+        {imageFile.map((image, index) => (
           <div
             key={index}
             className="relative group border rounded-lg overflow-hidden shadow-md"
@@ -249,7 +295,7 @@ console.log(response)
           <div className="flex justify-end space-x-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => onClose()}
               className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md"
             >
               Cancel
@@ -258,6 +304,7 @@ console.log(response)
               type="submit"
               className="bg-amber-800 text-white px-4 py-2 rounded-md hover:bg-amber-700"
             >
+              
               Save
             </button>
           </div>

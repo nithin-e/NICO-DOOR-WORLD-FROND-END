@@ -3,8 +3,15 @@ import { Footer } from './Footer';
 import { ProductSection } from './ProductSection';
 import { FeaturesSection } from './FeaturesSection';
 import {ContactSection} from './ContactSection'
+import { useNavigate } from 'react-router-dom';
+
+
 
 export const Hero = () => {
+  const navigate = useNavigate();
+  
+
+  
   return (
     <>
       <Navbar />
@@ -20,13 +27,13 @@ export const Hero = () => {
                 Visit our showroom to explore our extensive collection of premium doors. Expert consultation available.
               </p>
               <div className="flex gap-4">
-                <button className="border-2 border-white text-white px-8 py-3 rounded-full font-medium hover:bg-white hover:text-amber-800 transition">
+                <button  onClick={() => navigate('/ProductList')} className="border-2 border-white text-white px-8 py-3 rounded-full font-medium hover:bg-white hover:text-amber-800 transition cursor-pointer">
                   View Collection
+                 
                 </button>
               </div>
             </div>
             <div className="hidden md:block">
-              {/* You can add an image or another content here */}
             </div>
           </div>
         </div>
