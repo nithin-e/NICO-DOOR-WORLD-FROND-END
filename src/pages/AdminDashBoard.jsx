@@ -1,43 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Loader } from 'lucide-react';
 import axiosInstance from '../cors/axiousInstence';
 import AdminNavbar from './AdminNavbar';
 import AdminFooter from './AdminFooter';
 import ProductModal from './AddProductForm';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
 
 const AdminHome = () => {
+
+  const navigate=useNavigate()
+
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loadingProductId, setLoadingProductId] = useState(null);
+
+
+
 
   useEffect(() => {
     async function productDataFetching() {
       try {
         const response = await axiosInstance.get('http://localhost:4000/api/productData', {
           headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
         });
         if (response.data && response.data.data) {
           setProducts(response.data.data);
         }
       } catch (error) {
-        console.error('Error fetching product data:', error);
+        console.error('Error fetching why product data:', error);
       }
     }
     productDataFetching();
-  }, []);
+  }, [setProducts]);
 
-  const handleEditProduct = (product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
+ 
 
-  const handleDeleteProduct = (productId) => {
-    setProducts(products.filter((product) => product._id !== productId));
-  };
+  async function handleDeleteProduct(productId) {
+    setLoadingProductId(productId);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await axiosInstance.post(
+        'http://localhost:4000/api/deletingProduct',
+        { productId },
+        { headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
+
+      if(!response.data.success){
+        toast.failed(response.data.message || "Sorry,something went wrong please try again.")
+      }
+
+      if (response.data.success) {
+        
+          setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId));
+       
+      }
+    } catch (error) {
+      console.log('Error deleting product:', error);
+    } finally {
+      setLoadingProductId(null);
+    }
+  }
 
   const handleAddProduct = () => {
-    setSelectedProduct(null);
-    setIsModalOpen(true);
+    navigate('/AddProductForm')
   };
 
   return (
@@ -92,17 +124,27 @@ const AdminHome = () => {
                     <td className="border p-2 sm:p-3">{product.stock}</td>
                     <td className="border p-2 sm:p-3 text-center">
                       <div className="flex justify-center space-x-2">
-                        <button
+                        {/* <button
                           onClick={() => handleEditProduct(product)}
-                          className="text-amber-800 hover:text-amber-600"
+                          className="text-amber-800 hover:text-amber-600 transition-colors"
+                          disabled={loadingProductId === product._id}
                         >
                           <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
-                        </button>
+                        </button> */}
                         <button
                           onClick={() => handleDeleteProduct(product._id)}
-                          className="text-red-600 hover:text-red-800"
+                          className={`transition-colors ${
+                            loadingProductId === product._id
+                              ? 'text-gray-400'
+                              : 'text-red-600 hover:text-red-800'
+                          }`}
+                          disabled={loadingProductId === product._id}
                         >
-                          <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                          {loadingProductId === product._id ? (
+                            <Loader className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                          )}
                         </button>
                       </div>
                     </td>
@@ -120,6 +162,7 @@ const AdminHome = () => {
             />
           )}
         </div>
+       
       </div>
       <AdminFooter />
     </>

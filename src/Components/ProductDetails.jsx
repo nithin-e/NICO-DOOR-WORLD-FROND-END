@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 
 const ProductDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
-  const [loading, setLoading] = useState(true); // ✅ Track loading state
+  const [loading, setLoading] = useState(true);
 
   const location = useLocation();
   const product = location.state?.product;
@@ -48,18 +48,18 @@ const ProductDetailPage = () => {
       <Navbar />
 
       {/* Header */}
-       <div className="bg-amber-800 text-white py-16 text-center">
+      <div className="bg-amber-800 text-white py-16 text-center mt-[60px]">
         <h1 className="text-4xl font-bold mb-4">Our Door Collections</h1>
         <p className="text-lg max-w-2xl mx-auto">
           Explore our wide range of doors designed to match every style, need, and budget.
         </p>
       </div>
 
-      {/* Product Section */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
+     
+      <div className="max-w-7xl mx-auto px-4 py-16 ">
         <div className="grid md:grid-cols-2 gap-12">
 
-          {/* Image Gallery */}
+          
           <div>
             <div className="mb-4">
               <img

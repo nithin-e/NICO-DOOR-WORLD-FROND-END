@@ -25,11 +25,11 @@ export const FeaturesSection = () => {
     <div className="bg-amber-50 py-16">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-gray-800 mb-12 text-center">
-          Why Choose Nice Door World?
+          Why Choose Nico Door World?
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <FeatureCard key={index} {...feature} />
+            <FeatureCard key={index} {...feature}  />
           ))}
         </div>
       </div>

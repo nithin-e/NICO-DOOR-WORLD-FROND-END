@@ -1,36 +1,43 @@
 import React from 'react';
 import { Home, Package, Settings, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axiosInstance from '../cors/axiousInstence';
+import toast from 'react-hot-toast';
+import { Logo } from '../Components/Logo'; 
 
 const AdminNavbar = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      const response = await axiosInstance.post(
+        "http://localhost:4000/api/logOut",
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (!response.data.success) {
+        toast.error(response.data.message);
+        return;
+      }
+      toast.success("Logout Completed Successfully");
+      navigate('/adminLoginPage', { replace: true });
+    } catch (error) {
+      console.error("❌ Logout Error:", error);
+      toast.error("Logout failed! Please try again.");
+    }
   };
 
   return (
     <nav className="bg-white shadow-sm p-4 flex justify-between items-center flex-wrap">
-      <div className="flex items-center mb-4 sm:mb-0">
-        <svg 
-          viewBox="0 0 50 50" 
-          className="w-12 h-12 mr-3"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path 
-            d="M15 8 L35 4 L35 46 L15 42 Z" 
-            className="fill-amber-800"
-            stroke="#2d1810"
-            strokeWidth="1"
-          />
-          <path 
-            d="M18 12 L32 9 L32 39 L18 36 Z" 
-            className="fill-amber-600"
-          />
-        </svg>
-        <h1 className="text-2xl font-bold text-amber-900">Nice Door</h1>
-      </div>
+      {/* Use the Logo Component Here */}
+      <Logo />
 
       <div className="flex items-center space-x-4 flex-wrap sm:flex-nowrap">
         <button 

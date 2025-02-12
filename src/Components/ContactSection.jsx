@@ -1,6 +1,6 @@
 import React from 'react';
 import { ContactInfo } from './ContactInfo';
-import { ContactForm } from './ContactForm';
+import  LocationMap  from './LocationMap';
 
 export const ContactSection = () => {
   return (
@@ -11,7 +11,7 @@ export const ContactSection = () => {
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
           <ContactInfo />
-          <ContactForm />
+          <LocationMap />
         </div>
       </div>
     </div>

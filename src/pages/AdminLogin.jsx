@@ -37,9 +37,15 @@ const AdminLogin = () => {
         
         const {isValid, errors} = validateCredentials(formData)
          if (isValid) {
-            const response = await axiosInstance.post('http://localhost:4000/api/adminLogin', formData, {
-                headers: { 'Content-Type': 'application/json' },
-            });
+          const response = await axiosInstance.post(
+            "http://localhost:4000/api/adminLogin",
+            formData,
+            {
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true,
+            }
+          );
+          
             console.log('Login successful:', response.data)
 
            navigate('/adminHome')

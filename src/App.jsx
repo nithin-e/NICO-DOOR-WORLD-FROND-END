@@ -5,6 +5,9 @@ import ProductList from './Components/ProductList'
 import ProductDetails from './Components/ProductDetails'
 import AdminLogin from "./pages/AdminLogin";
 import AdminHome from "./pages/AdminDashBoard";
+import AddProductForm from './pages/AddProductForm'
+import ContactForNicco from "./Components/ContactForNicco";
+
 
 
 
@@ -18,6 +21,8 @@ function App() {
         <Route path="/ProductDetails/:id" element={<ProductDetails />} />
         <Route path="/adminLoginPage" element={<AdminLogin/>}  />
         <Route path="/adminHome" element={<AdminHome/>}  />
+        <Route path="/addProductForm" element={<AddProductForm/>}  />
+        <Route path="/Contact" element={<ContactForNicco/>}/>
       </Routes>
     </div>
   );
