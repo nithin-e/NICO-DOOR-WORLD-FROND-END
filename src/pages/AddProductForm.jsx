@@ -21,6 +21,8 @@ const compressImage = async (file) => {
 
   try {
     const compressedFile = await imageCompression(file, options);
+    console.log('...................',compressedFile);
+    
     return compressedFile;
   } catch (error) {
     console.error("Error compressing image:", error);
@@ -37,6 +39,8 @@ const uploadImagesToCloudinary = async (images, updateProgress) => {
     formData.append("upload_preset", "nico-door-world");
 
     try {
+      console.log('hey hey');
+      
       const response = await fetch(
         "https://api.cloudinary.com/v1_1/ddwsn0bwq/image/upload",
         {
@@ -44,8 +48,11 @@ const uploadImagesToCloudinary = async (images, updateProgress) => {
           body: formData,
         }
       );
-
+      
       const data = await response.json();
+      console.log('Cloudinary Response:', data); // Log full response
+      console.log('Uploaded Image URL:', data.secure_url); // Log URL
+      
       updateProgress((index + 1) / images.length * 100);
       return data.secure_url;
     } catch (error) {
@@ -137,6 +144,8 @@ const ProductAddPage = () => {
       }
 
       const uploadedImages = await uploadImagesToCloudinary(images, setUploadProgress);
+      console.log('All Uploaded Image URLs:', uploadedImages);
+      
       const filteredImages = uploadedImages.filter(url => url !== null);
 
       if (filteredImages.length === 0) {
@@ -160,9 +169,7 @@ const ProductAddPage = () => {
         }
       );
 
-      // if(!response.data.success){
-      //   toast.failed(response.data.message || "Sorry,something went wrong please try again.")
-      // }
+     
 
       if (response.data) {
         toast.success('Product added successfully!');

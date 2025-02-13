@@ -5,21 +5,77 @@ import axiosInstance from '../cors/axiousInstence';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+
+
+
+
+
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const handleImageClick = () => {
-    navigate(`/ProductDetails/${product._id}`, { state: { product } });
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleImageClick = (e) => {
+    e.preventDefault();
+    if (isExpanded) {
+      // If already expanded, navigate to details
+      navigate(`/ProductDetails/${product._id}`, { state: { product } });
+    } else {
+      // If not expanded, show expanded view
+      setIsExpanded(true);
+    }
   };
 
+  // Handle click outside to close expanded view
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isExpanded && !e.target.closest('.product-card-image')) {
+        setIsExpanded(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isExpanded]);
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transform transition hover:scale-105">
-      <img 
-        src={product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/300'}
-        alt={product.name}
-        onClick={handleImageClick}
-        className="w-full h-64 object-cover cursor-pointer"
-      />
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transform transition">
+      <div 
+        className={`relative transition-all duration-300 ${
+          isExpanded ? 'h-auto z-50' : 'h-64'
+        }`}
+      >
+        <img 
+          src={product.images?.[0] || '/api/placeholder/300/300'}
+          alt={product.name}
+          onClick={handleImageClick}
+          className={`w-full cursor-pointer transition-all duration-300 product-card-image ${
+            isExpanded ? 'h-auto max-h-96 object-contain scale-110' : 'h-64 object-cover'
+          }`}
+          style={{
+            WebkitTouchCallout: 'none',
+            userSelect: 'none',
+          }}
+        />
+        {isExpanded && (
+          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-center py-2 text-sm">
+            Click again to view details
+          </div>
+        )}
+      </div>
+      
       <div className="p-6">
         <h3 className="text-xl font-semibold text-gray-800 mb-2">{product.name}</h3>
 
@@ -34,20 +90,18 @@ const ProductCard = ({ product }) => {
           </li>
         </ul>
 
-        {product.features && product.features.length > 0 ? (
+        {product.features?.length > 0 && (
           <ul className="mb-4 space-y-2">
             {product.features.map((feature, index) => (
               <li key={index} className="text-sm text-gray-700">• {feature}</li>
             ))}
           </ul>
-        ) : (
-          <p className="text-sm text-gray-500"></p>
         )}
       </div>
     </div>
   );
 };
-
+// Pagination Component
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   return (
     <div className="flex items-center justify-center space-x-4 mt-8">
@@ -60,7 +114,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         Previous
       </button>
       
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 overflow-x-auto">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
@@ -88,6 +142,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   );
 };
 
+// Main ProductPage Component
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -95,15 +150,13 @@ const ProductPage = () => {
   const productsPerPage = 15;
 
   useEffect(() => {
-    async function productDataFetching() {
+    const productDataFetching = async () => {
       try {
         const response = await axiosInstance.get('http://localhost:4000/api/userFecth', {
           headers: { 'Content-Type': 'application/json' },
         });
 
-        console.log('Fetched Data:', response.data);
-
-        if (response.data && response.data.data) {
+        if (response.data?.data) {
           setProducts(response.data.data);
         } else {
           console.log('API response does not contain expected data.');
@@ -114,12 +167,11 @@ const ProductPage = () => {
       } finally {
         setTimeout(() => setLoading(false), 1000);
       }
-    }
+    };
 
     productDataFetching();
   }, []);
 
-  // Calculate pagination values
   const totalPages = Math.ceil(products.length / productsPerPage);
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
@@ -134,7 +186,6 @@ const ProductPage = () => {
     <div className="bg-gray-50 min-h-screen">
       <Navbar />
       
-      {/* Hero Section */}
       <div className="bg-amber-800 text-white py-16 text-center mt-[60px]">
         <h1 className="text-4xl font-bold mb-4">Our Door Collections</h1>
         <p className="text-lg max-w-2xl mx-auto">
@@ -142,7 +193,6 @@ const ProductPage = () => {
         </p>
       </div>
 
-     
       {loading ? (
         <div className="flex flex-col items-center justify-center min-h-[50vh]">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-amber-600"></div>
@@ -150,7 +200,7 @@ const ProductPage = () => {
         </div>
       ) : (
         <div className="max-w-7xl mx-auto px-4 py-16 bg-amber-50">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 cursor-pointer">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {currentProducts.length > 0 ? (
               currentProducts.map(product => (
                 <ProductCard key={product._id} product={product} />
