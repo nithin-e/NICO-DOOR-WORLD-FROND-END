@@ -33,8 +33,8 @@ const ProductDetailPage = () => {
   }
 
   const contactOptions = [
-    { icon: Phone, method: 'Call Us', value: '+1 (234) 567-8900', type: 'phone' },
-    { icon: MessageCircle, method: 'WhatsApp', value: '+1 (234) 567-8901', type: 'whatsapp' }
+   { icon: Phone, method: 'Call Us', value:  '+917034684567', type: 'phone' },
+    { icon: MessageCircle, method: 'WhatsApp', value: '+917034684567', type: 'whatsapp' }
   ];
 
   return (
