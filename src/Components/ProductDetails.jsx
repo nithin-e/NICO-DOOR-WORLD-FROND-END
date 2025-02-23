@@ -32,9 +32,37 @@ const ProductDetailPage = () => {
     );
   }
 
+  const formatWhatsAppMessage = () => {
+    const currentImage = product.images && product.images.length > 0 
+      ? product.images[selectedImage] 
+      : 'No image available';
+
+    const message = `Hi, I'm interested in:\n\n` +
+      `*${product.name}*\n` +
+      `Price: ₹${product.price.toLocaleString('en-IN')}\n` +
+      `Material: ${product.material}\n` +
+      `Color: ${product.color}\n\n` +
+      `Product Image: ${currentImage}\n\n` +
+      `Is this product available now?`;
+    
+    return encodeURIComponent(message);
+  };
+
   const contactOptions = [
-   { icon: Phone, method: 'Call Us', value:  '+917034684567', type: 'phone' },
-    { icon: MessageCircle, method: 'WhatsApp', value: '+917034684567', type: 'whatsapp' }
+    { 
+      icon: Phone, 
+      method: 'Call Us', 
+      value: '+91 95263 09490', 
+      type: 'phone',
+      href: 'tel:+919526309490'
+    },
+    { 
+      icon: MessageCircle, 
+      method: 'WhatsApp', 
+      value: '+91 95263 09490', 
+      type: 'whatsapp',
+      href: `https://wa.me/919526309490?text=${formatWhatsAppMessage()}`
+    }
   ];
 
   return (
@@ -110,8 +138,10 @@ const ProductDetailPage = () => {
                 {contactOptions.map((option, index) => (
                   <a
                     key={index}
-                    href={`${option.type === 'phone' ? 'tel:' : 'https://wa.me/'}${option.value.replace(/\D/g, '')}`}
+                    href={option.href}
                     className="flex items-center bg-white p-3 sm:p-4 rounded-lg shadow-md hover:bg-amber-100 transition"
+                    target={option.type === 'whatsapp' ? '_blank' : undefined}
+                    rel={option.type === 'whatsapp' ? 'noopener noreferrer' : undefined}
                   >
                     <option.icon className="w-5 h-5 sm:w-6 sm:h-6 text-amber-800 mr-3" />
                     <div>

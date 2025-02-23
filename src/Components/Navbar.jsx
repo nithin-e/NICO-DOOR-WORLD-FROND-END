@@ -51,7 +51,7 @@ export const Navbar = () => {
         {/* Call Info */}
         <div className="hidden md:flex items-center text-amber-800">
           <Phone className="w-5 h-5 mr-2" />
-          <span className="font-bold">Call Us: (+91) 7034683567</span>
+          <span className="font-bold">Call Us: +91 95263 09490</span>
         </div>
 
         {/* Mobile Menu Button */}

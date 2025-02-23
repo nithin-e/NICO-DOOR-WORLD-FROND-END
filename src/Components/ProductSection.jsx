@@ -23,10 +23,13 @@ export const ProductSection = () => {
           withCredentials: true
         });
         
+         
         if (response.data && response.data.data) {
           setProducts(response.data.data);
         }
       } catch (error) {
+        console.log('whts is the problem bro',error);
+        
         console.error('Error fetching products:', error);
         setProducts([]);
       } finally {
@@ -36,6 +39,7 @@ export const ProductSection = () => {
 
     fetchProducts();
   }, []);
+  
 
   useEffect(() => {
     const updateLayout = () => {

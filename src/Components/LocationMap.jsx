@@ -10,7 +10,6 @@ const LocationMap = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ Default Location: "Q76G+JH Shoranur, Kerala"
   const center = { lat: 10.7652, lng: 76.2707 };
 
   useEffect(() => {
@@ -30,29 +29,65 @@ const LocationMap = () => {
 
         if (!isMounted || !containerRef.current) return;
 
-        // Initialize map
         if (!mapRef.current) {
           mapRef.current = new window.google.maps.Map(containerRef.current, {
             center,
-            zoom: 15, // ✅ Adjusted zoom level
+            zoom: 15,
             mapTypeId: 'roadmap',
             streetViewControl: false,
             mapTypeControl: false,
             fullscreenControl: false,
+            styles: [
+              {
+                featureType: "all",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#44403c" }]
+              },
+              {
+                featureType: "water",
+                elementType: "geometry.fill",
+                stylers: [{ color: "#f5f5f4" }]
+              },
+              {
+                featureType: "landscape",
+                elementType: "geometry.fill",
+                stylers: [{ color: "#fafaf9" }]
+              },
+              {
+                featureType: "road",
+                elementType: "geometry.fill",
+                stylers: [{ color: "#292524" }]
+              },
+              {
+                featureType: "road",
+                elementType: "geometry.stroke",
+                stylers: [{ color: "#44403c" }]
+              }
+            ]
           });
-        } else {
-          mapRef.current.setCenter(center);
-        }
 
-        // ✅ Add marker at Shoranur, Kerala
-        if (!markerRef.current) {
-          markerRef.current = new window.google.maps.Marker({
-            position: center,
-            map: mapRef.current,
-            title: 'Shoranur, Kerala',
+          const infoWindow = new window.google.maps.InfoWindow({
+            content: `
+              <div style="padding: 12px; min-width: 200px;">
+                <h3 style="font-weight: 600; margin-bottom: 8px; color: #292524;">Nice Door World</h3>
+                <p style="color: #57534e; font-size: 14px;">Near SMP junction, kulapully</p>
+                <p style="color: #57534e; font-size: 14px; margin-top: 4px;">Open Today: 9:00 AM - 6:00 PM</p>
+              </div>
+            `
           });
-        } else {
-          markerRef.current.setPosition(center);
+
+          if (!markerRef.current) {
+            markerRef.current = new window.google.maps.Marker({
+              position: center,
+              map: mapRef.current,
+              title: 'Nice Door World',
+              animation: window.google.maps.Animation.DROP
+            });
+
+            markerRef.current.addListener('click', () => {
+              infoWindow.open(mapRef.current, markerRef.current);
+            });
+          }
         }
 
         setIsLoading(false);
@@ -69,25 +104,20 @@ const LocationMap = () => {
 
     return () => {
       isMounted = false;
-      mapRef.current = null;
-      markerRef.current = null;
     };
-  }, []); // ✅ Runs only once when component mounts
-
-  if (error) {
-    return (
-      <div className="w-full h-64 bg-red-50 rounded-lg flex items-center justify-center">
-        <p className="text-red-600">Failed to load map: {error}</p>
-      </div>
-    );
-  }
+  }, []);
 
   return (
-    <div className="w-full h-64 relative rounded-lg overflow-hidden">
+    <div className="w-full h-[350px] relative rounded-lg overflow-hidden shadow-md border border-stone-200">
+      {error && (
+        <div className="absolute inset-0 bg-stone-50 flex items-center justify-center">
+          <p className="text-stone-600 text-center px-4">Unable to load map: {error}</p>
+        </div>
+      )}
       <div ref={containerRef} className="w-full h-full" />
       {isLoading && (
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-          <p className="text-gray-600">Loading map...</p>
+        <div className="absolute inset-0 bg-stone-50 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-stone-700 border-t-transparent"></div>
         </div>
       )}
     </div>
