@@ -1,6 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Star, ChevronRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Star, ChevronRight, Lock } from 'lucide-react';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -25,7 +24,7 @@ export const Footer = () => {
               </a>
               <a href="mailto:info@nicedoorworld.com" className="flex items-center gap-2 text-amber-200/80 hover:text-amber-200 transition-colors text-sm">
                 <Mail size={14} />
-                <span>info@nicodoorworld.com</span>
+                <span>nicodoorworldkvl@.com</span>
               </a>
               <div className="flex items-center gap-2 text-amber-200/80 text-sm">
                 <MapPin size={14} />
@@ -40,7 +39,7 @@ export const Footer = () => {
             <ul className="space-y-1">
               {['Home', 'Products', 'Gallery', 'About Us', 'Contact'].map((link, index) => (
                 <li key={index}>
-                  <a href="#" className="text-amber-100/80 hover:text-amber-200 transition-colors flex items-center gap-1 group text-sm">
+                  <a href="/" className="text-amber-100/80 hover:text-amber-200 transition-colors flex items-center gap-1 group text-sm">
                     <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link}
                   </a>
@@ -93,7 +92,7 @@ export const Footer = () => {
                 {[Facebook, Instagram, Twitter].map((Icon, index) => (
                   <a 
                     key={index}
-                    href="#" 
+                    href="/Contact" 
                     className="bg-amber-800/50 p-1.5 rounded-lg hover:bg-amber-700/50 transition-colors"
                   >
                     <Icon size={16} className="text-amber-200" />
@@ -110,9 +109,16 @@ export const Footer = () => {
             <p className="text-amber-200/60 text-xs">
               © {currentYear} Nico Door World. All rights reserved.
             </p>
-            <div className="flex gap-4 text-xs">
+            <div className="flex gap-4 text-xs items-center">
               <a href="#" className="text-amber-200/60 hover:text-amber-200 transition-colors">Privacy Policy</a>
               <a href="#" className="text-amber-200/60 hover:text-amber-200 transition-colors">Terms of Service</a>
+              <a 
+                href="/adminLoginPage"
+                className="flex items-center gap-1.5 bg-amber-800/50 px-3 py-1.5 rounded-lg hover:bg-amber-700/50 transition-colors text-amber-200"
+              >
+                <Lock size={14} />
+                Admin Login
+              </a>
             </div>
           </div>
         </div>
@@ -120,3 +126,5 @@ export const Footer = () => {
     </footer>
   );
 };
+
+export default Footer;

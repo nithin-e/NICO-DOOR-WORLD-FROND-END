@@ -65,10 +65,10 @@ const ContactForNicco = () => {
   }, []);
 
   const contactInfo = [
-    { icon: <Phone className="w-6 h-6" />, title: "Phone", content: "+1 (555) 123-4567" },
-    { icon: <Mail className="w-6 h-6" />, title: "Email", content: "info@doorshopping.com" },
+    { icon: <Phone className="w-6 h-6" />, title: "Phone", content: "+91 95263 09490" },
+    { icon: <Mail className="w-6 h-6" />, title: "Email", content: 'nicodoorworldkvl@.com'},
     { icon: <Clock className="w-6 h-6" />, title: "Working Hours", content: "Mon-Sat: 9AM-6PM" },
-    { icon: <MapPin className="w-6 h-6" />, title: "Location", content: "123 Door Street, NY" },
+    { icon: <MapPin className="w-6 h-6" />, title: "Location", content: "SMP junction, kulapully"},
   ];
 
   const services = ["High-quality doors", "Custom door designs", "Fast delivery", "Door installation services"];

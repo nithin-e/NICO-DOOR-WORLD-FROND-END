@@ -4,12 +4,15 @@ import { Logo } from "./Logo";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activePath, setActivePath] = useState("/");
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
   useEffect(() => {
+    // Set initial active path
+    setActivePath(window.location.pathname);
+
     const handleClick = (event) => {
-      // Check if click is outside both the menu and the toggle button
       if (
         menuRef.current && 
         !menuRef.current.contains(event.target) &&
@@ -20,7 +23,6 @@ export const Navbar = () => {
       }
     };
 
-    // Only add the event listener if the menu is open
     if (isOpen) {
       document.addEventListener('mousedown', handleClick);
     }
@@ -30,6 +32,23 @@ export const Navbar = () => {
     };
   }, [isOpen]);
 
+  const getLinkStyle = (path) => {
+    return activePath === path 
+      ? "text-amber-800 font-bold"  // Active link style
+      : "text-gray-600 hover:text-amber-800 font-bold";  // Inactive link style
+  };
+
+  const getMobileLinkStyle = (path) => {
+    return activePath === path
+      ? "block text-amber-800 font-black text-lg bg-amber-50"  // Active mobile link style
+      : "block text-amber-800 font-black text-lg hover:text-gray-700";  // Inactive mobile link style
+  };
+
+  const handleNavClick = (path) => {
+    setActivePath(path);
+    setIsOpen(false);
+  };
+
   return (
     <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -37,13 +56,25 @@ export const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-8">
-          <a href="/" className="text-amber-800 font-bold hover:text-gray-700">
+          <a 
+            href="/" 
+            className={getLinkStyle("/")}
+            onClick={() => handleNavClick("/")}
+          >
             Home
           </a>
-          <a href="/ProductList" className="text-gray-600 hover:text-amber-800 font-bold">
+          <a 
+            href="/ProductList" 
+            className={getLinkStyle("/ProductList")}
+            onClick={() => handleNavClick("/ProductList")}
+          >
             Products
           </a>
-          <a href="/Contact" className="text-gray-600 hover:text-amber-800 font-bold">
+          <a 
+            href="/Contact" 
+            className={getLinkStyle("/Contact")}
+            onClick={() => handleNavClick("/Contact")}
+          >
             Contact
           </a>
         </div>
@@ -80,22 +111,22 @@ export const Navbar = () => {
           <div className="px-4">
             <a 
               href="/" 
-              className="block text-amber-800 font-black text-lg hover:text-gray-700 py-2"
-              onClick={() => setIsOpen(false)}
+              className={getMobileLinkStyle("/")}
+              onClick={() => handleNavClick("/")}
             >
               Home
             </a>
             <a 
               href="/ProductList" 
-              className="block text-amber-800 font-black text-lg hover:text-gray-700 py-2"
-              onClick={() => setIsOpen(false)}
+              className={getMobileLinkStyle("/ProductList")}
+              onClick={() => handleNavClick("/ProductList")}
             >
               Products
             </a>
             <a 
               href="/Contact" 
-              className="block text-amber-800 font-black text-lg hover:text-gray-700 py-2"
-              onClick={() => setIsOpen(false)}
+              className={getMobileLinkStyle("/Contact")}
+              onClick={() => handleNavClick("/Contact")}
             >
               Contact
             </a>
@@ -104,4 +135,6 @@ export const Navbar = () => {
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;

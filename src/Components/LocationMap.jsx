@@ -46,22 +46,22 @@ const LocationMap = () => {
               {
                 featureType: "water",
                 elementType: "geometry.fill",
-                stylers: [{ color: "#f5f5f4" }]
+                stylers: [{ color: "#e2e8f0" }]  // Lighter blue color
               },
               {
                 featureType: "landscape",
                 elementType: "geometry.fill",
-                stylers: [{ color: "#fafaf9" }]
+                stylers: [{ color: "#f8fafc" }]  // Very light background
               },
               {
                 featureType: "road",
                 elementType: "geometry.fill",
-                stylers: [{ color: "#292524" }]
+                stylers: [{ color: "#94a3b8" }]  // Medium gray for roads
               },
               {
                 featureType: "road",
                 elementType: "geometry.stroke",
-                stylers: [{ color: "#44403c" }]
+                stylers: [{ color: "#64748b" }]  // Darker gray for road borders
               }
             ]
           });

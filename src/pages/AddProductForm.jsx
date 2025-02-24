@@ -8,7 +8,7 @@ import AdminNavbar from "./AdminNavbar";
 import AdminFooter from "./AdminFooter";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const MAX_IMAGES = 6;
+const REQUIRED_IMAGES = 4; // Exactly 4 images are required
 
 // Optimized image compression options
 const compressImage = async (file) => {
@@ -21,8 +21,6 @@ const compressImage = async (file) => {
 
   try {
     const compressedFile = await imageCompression(file, options);
-    console.log('...................',compressedFile);
-    
     return compressedFile;
   } catch (error) {
     console.error("Error compressing image:", error);
@@ -39,8 +37,6 @@ const uploadImagesToCloudinary = async (images, updateProgress) => {
     formData.append("upload_preset", "nico-door-world");
 
     try {
-      console.log('hey hey');
-      
       const response = await fetch(
         "https://api.cloudinary.com/v1_1/ddwsn0bwq/image/upload",
         {
@@ -50,9 +46,6 @@ const uploadImagesToCloudinary = async (images, updateProgress) => {
       );
       
       const data = await response.json();
-      console.log('Cloudinary Response:', data); // Log full response
-      console.log('Uploaded Image URL:', data.secure_url); // Log URL
-      
       updateProgress((index + 1) / images.length * 100);
       return data.secure_url;
     } catch (error) {
@@ -66,11 +59,12 @@ const uploadImagesToCloudinary = async (images, updateProgress) => {
 
 const ProductAddPage = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [images, setImages] = useState([]);
   const [imageFile, setImageFile] = useState([]);
+  const [imageError, setImageError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     brand: '',
@@ -100,11 +94,26 @@ const ProductAddPage = () => {
     return true;
   };
 
+  const validateImages = () => {
+    if (images.length === 0) {
+      setImageError('Please upload product images');
+      toast.error('Please upload product images');
+      return false;
+    }
+    if (images.length !== REQUIRED_IMAGES) {
+      setImageError(`Exactly ${REQUIRED_IMAGES} images are required. You currently have ${images.length} images.`);
+      toast.error(`Exactly ${REQUIRED_IMAGES} images are required. You currently have ${images.length} images.`);
+      return false;
+    }
+    setImageError('');
+    return true;
+  };
+
   const handleImageUpload = (e) => {
     const selectedFiles = Array.from(e.target.files);
     
-    if (selectedFiles.length + images.length > MAX_IMAGES) {
-      toast.error(`Maximum ${MAX_IMAGES} images allowed`);
+    if (selectedFiles.length + images.length > REQUIRED_IMAGES) {
+      toast.error(`Maximum ${REQUIRED_IMAGES} images allowed`);
       return;
     }
 
@@ -114,6 +123,7 @@ const ProductAddPage = () => {
       setImages(prev => [...prev, ...validFiles]);
       const imageUrls = validFiles.map((file) => URL.createObjectURL(file));
       setImageFile(prev => [...prev, ...imageUrls]);
+      setImageError(''); // Clear any existing image error
     }
   };
 
@@ -121,35 +131,36 @@ const ProductAddPage = () => {
     setImageFile(prev => prev.filter(image => image !== url));
     setImages(prev => prev.filter((_, i) => i !== index));
     URL.revokeObjectURL(url);
+    setImageError(''); // Clear any existing image error
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Reset errors
+    setError({});
+    setImageError('');
+
+    // Validate form data
+    const { isValid, errors } = ProductValidation(formData);
+    setError(errors);
+
+    // Validate images
+    const imagesValid = validateImages();
+
+    if (!isValid || !imagesValid) {
+      return;
+    }
+
     setLoading(true);
     setUploadProgress(0);
 
     try {
-      const { isValid, errors } = ProductValidation(formData);
-
-      if (!isValid) {
-        setError(errors);
-        setLoading(false);
-        return;
-      }
-
-      if (images.length === 0) {
-        toast.error("Please add at least one image");
-        setLoading(false);
-        return;
-      }
-
       const uploadedImages = await uploadImagesToCloudinary(images, setUploadProgress);
-      console.log('All Uploaded Image URLs:', uploadedImages);
-      
       const filteredImages = uploadedImages.filter(url => url !== null);
 
-      if (filteredImages.length === 0) {
-        throw new Error("Failed to upload images");
+      if (filteredImages.length !== REQUIRED_IMAGES) {
+        throw new Error("Failed to upload all required images");
       }
 
       const productData = {
@@ -168,8 +179,6 @@ const ProductAddPage = () => {
           timeout: 5000,
         }
       );
-
-     
 
       if (response.data) {
         toast.success('Product added successfully!');
@@ -215,30 +224,29 @@ const ProductAddPage = () => {
     );
   }
 
-
   return (
     <div className="min-h-screen flex flex-col">
       <Toaster 
-  position="top-center"
-  toastOptions={{
-    success: {
-      duration: 2000,
-      style: {
-        background: 'green',
-        color: '#fff',
-      },
-    },
-    error: {
-      duration: 8000,
-      style: {
-        background: 'red',
-        color: '#fff',
-      },
-    },
-  }}
-/>
+        position="top-center"
+        toastOptions={{
+          success: {
+            duration: 2000,
+            style: {
+              background: 'green',
+              color: '#fff',
+            },
+          },
+          error: {
+            duration: 8000,
+            style: {
+              background: 'red',
+              color: '#fff',
+            },
+          },
+        }}
+      />
       <AdminNavbar />
-      <div className="flex-grow container mx-auto px-4 py-8  bg-amber-50">
+      <div className="flex-grow container mx-auto px-4 py-8 bg-amber-50">
         <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
           <h1 className="text-3xl font-bold text-amber-900 mb-8 text-center">Add New Product</h1>
           
@@ -333,8 +341,13 @@ const ProductAddPage = () => {
             <div className="space-y-4">
               <div className="w-full">
                 <label className="block text-sm font-medium text-amber-800 mb-2">
-                  Upload Images
+                  Upload Images (Exactly {REQUIRED_IMAGES} images required)
                 </label>
+                {imageError && (
+                  <div className="text-red-500 text-sm mb-2">
+                    {imageError}
+                  </div>
+                )}
                 <div className="flex items-center justify-center w-full">
                   <label className="cursor-pointer flex flex-col items-center justify-center w-full border-2 border-dashed border-amber-800 rounded-lg bg-amber-50 p-6 hover:border-amber-600 transition">
                     <svg
@@ -352,7 +365,9 @@ const ProductAddPage = () => {
                       ></path>
                     </svg>
                     <p className="text-sm text-amber-800">Click to upload or drag & drop files</p>
-                    <p className="text-xs text-amber-600 mt-1">(Supports multiple images)</p>
+                    <p className="text-xs text-amber-600 mt-1">
+                      ({images.length} of {REQUIRED_IMAGES} images selected)
+                    </p>
                     <input
                       id="images"
                       type="file"
@@ -377,7 +392,8 @@ const ProductAddPage = () => {
                         className="w-full h-40 object-cover"
                       />
                       <button
-                        onClick={() => handleRemoveImage(image)}
+                        type="button"
+                        onClick={() => handleRemoveImage(image, index)}
                         className="absolute top-2 right-2 bg-red-600 text-white text-xs p-2 rounded-md opacity-0 group-hover:opacity-100 transition"
                       >
                         Remove
@@ -422,4 +438,4 @@ const ProductAddPage = () => {
   );
 };
 
-export default ProductAddPage;
+export default ProductAddPage

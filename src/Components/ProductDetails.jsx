@@ -5,6 +5,11 @@ import { Phone, MessageCircle } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const ProductDetailPage = () => {
+
+
+
+
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +19,14 @@ const ProductDetailPage = () => {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
+
+  
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+const toggleDescription = () => setShowFullDescription(!showFullDescription);
+const truncatedDescription = product.description.length > 40 
+  ? `${product.description.substring(0, 40)}...` 
+  : product.description;
 
   if (loading) {
     return (
@@ -51,7 +64,7 @@ const ProductDetailPage = () => {
   const contactOptions = [
     { 
       icon: Phone, 
-      method: 'Call Us', 
+      method: 'Call us', 
       value: '+91 95263 09490', 
       type: 'phone',
       href: 'tel:+919526309490'
@@ -105,8 +118,17 @@ const ProductDetailPage = () => {
 
           <div className="space-y-6">
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900">{product.name}</h1>
-            <p className="text-base sm:text-lg font-sans text-gray-700 leading-relaxed">{product.description}</p>
-            <p className="text-xl sm:text-2xl font-sans font-semibold text-amber-700">
+            <p className="text-base sm:text-lg font-sans text-gray-700 leading-relaxed">
+  {showFullDescription ? product.description : truncatedDescription}
+  {product.description.length > 40 && (
+    <button 
+      onClick={toggleDescription} 
+      className="text-amber-700 font-medium ml-2 focus:outline-none"
+    >
+      {showFullDescription ? 'Read Less' : 'Read More'}
+    </button>
+  )}
+</p>            <p className="text-xl sm:text-2xl font-sans font-semibold text-amber-700">
               ₹{product.price.toLocaleString('en-IN')}
             </p>
 
