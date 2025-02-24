@@ -4,12 +4,36 @@ import { Footer } from './Footer';
 import { Phone, MessageCircle } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
+// ProductDescription Component
+const ProductDescription = ({ description }) => {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const truncateLength = 150;
+
+  const truncatedDescription = description.length > truncateLength 
+    ? `${description.substring(0, truncateLength)}...` 
+    : description;
+
+  return (
+    <div className="space-y-2">
+      <div className="text-base sm:text-lg font-sans text-gray-700 leading-relaxed">
+        <p className="whitespace-pre-line break-words">
+          {showFullDescription ? description : truncatedDescription}
+        </p>
+        {description.length > truncateLength && (
+          <button
+            onClick={() => setShowFullDescription(!showFullDescription)}
+            className="text-amber-700 hover:text-amber-800 font-medium mt-2 focus:outline-none transition-colors duration-200"
+          >
+            {showFullDescription ? "Read Less" : "Read More"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ProductDetailPage Component
 const ProductDetailPage = () => {
-
-
-
-
-
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -19,14 +43,6 @@ const ProductDetailPage = () => {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-
-  
-  const [showFullDescription, setShowFullDescription] = useState(false);
-
-const toggleDescription = () => setShowFullDescription(!showFullDescription);
-const truncatedDescription = product.description.length > 40 
-  ? `${product.description.substring(0, 40)}...` 
-  : product.description;
 
   if (loading) {
     return (
@@ -118,17 +134,8 @@ const truncatedDescription = product.description.length > 40
 
           <div className="space-y-6">
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900">{product.name}</h1>
-            <p className="text-base sm:text-lg font-sans text-gray-700 leading-relaxed">
-  {showFullDescription ? product.description : truncatedDescription}
-  {product.description.length > 40 && (
-    <button 
-      onClick={toggleDescription} 
-      className="text-amber-700 font-medium ml-2 focus:outline-none"
-    >
-      {showFullDescription ? 'Read Less' : 'Read More'}
-    </button>
-  )}
-</p>            <p className="text-xl sm:text-2xl font-sans font-semibold text-amber-700">
+            <ProductDescription description={product.description} />
+            <p className="text-xl sm:text-2xl font-sans font-semibold text-amber-700">
               ₹{product.price.toLocaleString('en-IN')}
             </p>
 

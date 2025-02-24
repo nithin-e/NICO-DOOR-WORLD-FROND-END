@@ -120,7 +120,7 @@ export const Hero = () => {
                 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
-                  onClick={() => navigate('/contact')}
+                  onClick={() => navigate('/')}
                   className="border-2 border-amber-400 text-amber-200 px-6 py-3 rounded-lg font-semibold hover:bg-amber-400/10 transition flex items-center gap-2"
                 >
                   Schedule Consultation <ChevronRight className="w-5 h-5" />
