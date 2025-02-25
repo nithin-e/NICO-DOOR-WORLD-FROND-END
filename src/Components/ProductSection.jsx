@@ -18,7 +18,7 @@ export const ProductSection = () => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const response = await axiosInstance.get('http://localhost:4000/api/userFecth', {
+        const response = await axiosInstance.get("/api/userFecth", {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         });

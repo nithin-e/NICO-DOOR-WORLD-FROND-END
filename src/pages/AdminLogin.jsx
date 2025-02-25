@@ -18,7 +18,7 @@ const AdminLogin = () => {
     // Check if the admin is already authenticated
     const checkAdminAuth = async () => {
       try {
-        const response = await axiosInstance.get("http://localhost:4000/api/verify", {
+        const response = await axiosInstance.get("/api/verify", {
           withCredentials: true,
         });
 
@@ -50,7 +50,7 @@ const AdminLogin = () => {
       const { isValid, errors } = validateCredentials(formData);
       if (isValid) {
         const response = await axiosInstance.post(
-          "http://localhost:4000/api/adminLogin",
+          "/api/adminLogin",
           formData,
           {
             headers: { "Content-Type": "application/json" },

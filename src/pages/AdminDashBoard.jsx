@@ -5,7 +5,6 @@ import AdminNavbar from './AdminNavbar';
 import AdminFooter from './AdminFooter';
 import ProductModal from './AddProductForm';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ const AdminHome = () => {
   useEffect(() => {
     async function productDataFetching() {
       try {
-        const response = await axiosInstance.get('http://localhost:4000/api/productData', {
+        const response = await axiosInstance.get("/api/productData", {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         });
@@ -41,7 +40,7 @@ const AdminHome = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       const response = await axiosInstance.post(
-        'http://localhost:4000/api/deletingProduct',
+        "/api/deletingProduct",
         { productId },
         { 
           headers: { 'Content-Type': 'application/json' },

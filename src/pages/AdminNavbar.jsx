@@ -1,7 +1,6 @@
 import React from 'react';
 import { Home, Package, Settings, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import axiosInstance from '../cors/axiousInstence';
 import toast from 'react-hot-toast';
 import { Logo } from '../Components/Logo'; 
@@ -12,7 +11,7 @@ const AdminNavbar = () => {
   const handleLogout = async () => {
     try {
       const response = await axiosInstance.post(
-        "http://localhost:4000/api/logOut",
+        "/api/logOut",
         {},
         {
           headers: {

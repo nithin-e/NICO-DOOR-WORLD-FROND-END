@@ -168,8 +168,7 @@ const ProductAddPage = () => {
         images: filteredImages
       };
 
-      const response = await axiosInstance.post(
-        "http://localhost:4000/api/addProduct",
+      const response = await axiosInstance.post("/api/addProduct",
         productData,
         {
           headers: {

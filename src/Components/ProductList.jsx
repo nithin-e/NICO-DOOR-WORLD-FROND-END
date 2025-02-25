@@ -152,7 +152,7 @@ const ProductPage = () => {
   useEffect(() => {
     const productDataFetching = async () => {
       try {
-        const response = await axiosInstance.get('http://localhost:4000/api/userFecth', {
+        const response = await axiosInstance.get("/api/userFecth", {
           headers: { 'Content-Type': 'application/json' },
         });
 

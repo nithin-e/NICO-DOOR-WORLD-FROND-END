@@ -1,8 +1,10 @@
 import axios from "axios";
 
+export const BASE_URL = "https://api.nicodoorworld.shop";
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:4000', 
+    baseURL: BASE_URL,
+    withCredentials: true,
 });
 
 

@@ -8,7 +8,7 @@ const ProtectedRoute = ({ element: Element }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axiosInstance.get("http://localhost:4000/api/verifyAdmin", {
+        const response = await axiosInstance.get("/api/verifyAdmin", {
           withCredentials: true,
         });
 
