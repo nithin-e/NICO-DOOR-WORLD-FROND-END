@@ -64,8 +64,8 @@ const AdminLogin = () => {
         setErrors(errors);
       }
     } catch (error) {
-      console.log("Login failed", error.response?.data?.message);
-      setGlobalErr(error.response?.data?.message || "Login error");
+      console.log("Login failed", error);
+      setGlobalErr(error || "Login error");
     }
   };
 
