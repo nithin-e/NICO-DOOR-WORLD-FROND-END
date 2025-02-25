@@ -1,5 +1,6 @@
 {
     "rewrites": [
+      { "source": "/api/:path*", "destination": "https://api.nicodoorworld.shop/api/:path*" },
       { "source": "/(.*)", "destination": "/index.html" }
     ]
   }
