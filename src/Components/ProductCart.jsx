@@ -37,7 +37,8 @@ export const ProductCard = ({ product }) => {
           </li>
         </ul>
 
-        <button className="w-full bg-amber-800 text-white px-4 py-2 rounded-full hover:bg-amber-700">
+        <button  onClick={handleImageClick}
+         className="w-full bg-amber-800 text-white px-4 py-2 rounded-full hover:bg-amber-700">
           Request
         </button>
       </div>

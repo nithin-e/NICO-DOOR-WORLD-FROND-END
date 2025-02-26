@@ -30,7 +30,7 @@ const productValidation = (formData) => {
     if (!formData.lockIncluded || formData.lockIncluded.trim() === '') {
         errors.lockIncluded = "Lock included field is required";
         isValid = false;
-    } else if (!['yes', 'no', 'YES', 'NO'].includes(formData.lockIncluded.trim())) {
+    } else if (!['yes', 'no', 'YES', 'NO','Yes','No'].includes(formData.lockIncluded.trim())) {
         errors.lockIncluded = "Only 'Yes' or 'No' is allowed";
         isValid = false;
     }

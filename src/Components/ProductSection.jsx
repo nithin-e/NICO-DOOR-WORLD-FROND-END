@@ -28,8 +28,6 @@ export const ProductSection = () => {
           setProducts(response.data.data);
         }
       } catch (error) {
-        console.log('whts is the problem bro',error);
-        
         console.error('Error fetching products:', error);
         setProducts([]);
       } finally {
